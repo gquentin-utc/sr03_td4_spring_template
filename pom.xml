@@ -31,6 +31,8 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <!-- downgrade to 1.4.200 to avoid a bug with spring boot 2.7.10 (hibernate) -->
+            <version>1.4.200</version>
             <scope>runtime</scope>
         </dependency>
         <!-- Mysql -->
