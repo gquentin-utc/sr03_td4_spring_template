@@ -70,3 +70,26 @@ _=> voir la classe `fr.utc.sr03.chat.dao.UserRepositoryImpl`_
 
 Dans l'interface initiale qui etend JpaRepository (fr.utc.sr03.chat.dao.UserRepository), etendre egalement l'interface personnalisee  
 _=> voir l'interface `fr.utc.sr03.chat.dao.UserRepository`_  
+
+# CORS
+Ajouter l'annotation @CrossOrigin a la classe controller ou a la methode getmapping/postmapping
+```
+@CrossOrigin(origins="*", allowedHeaders="*")
+```
+
+# Websocket
+Dans le pom.xml :
+```
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-websocket</artifactId>
+</dependency>
+```
+Creer une classe java de configuration  
+_=> voir la classe fr.utc.sr03.chat.websocket.WebSocketConfig_
+
+Creer une classe de java qui contient le serveur Websocket  
+_=> voir la classe fr.utc.sr03.chat.websocket.SampleWebSocketServer_
+
+Client HTML / JS :  
+_=> voir le fichier src/main/resources/test_websocket/sample_client.html_

@@ -1,31 +1,36 @@
-package fr.utc.sr03.chat.controller;
+package fr.utc.sr03.chat.controller_rest;
 
 import fr.utc.sr03.chat.dao.UserRepository;
 import fr.utc.sr03.chat.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 /**
- * URL du endpoint : http://localhost:8080/test
+ * URLs du endpoint :
+ * - http://localhost:8080/test/users
+ * - http://localhost:8080/test/users-with-cors
+ * => Controller "API" (sans template html, retourne du JSON)
  */
-@Controller
+@Controller()
+@RequestMapping("test")
 public class TestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
-	@Autowired
+    @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/test")
-    @ResponseBody // Pour faire sans template html
-    public String test() {
+    @GetMapping("/users")
+    @ResponseBody // Pour faire sans template html - peut etre mis aussi en annotation de la classe ou utiliser l'annotation @RestController (qui fait @Controller + @ResponseBody)
+    public String testUserRepo() {
         LOGGER.info("=== ALL USERS ===");
-    	List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
         users.forEach(user -> {
             LOGGER.info(user.getFirstName() + " : " + user.isAdmin());
         });
@@ -50,20 +55,40 @@ public class TestController {
 
         LOGGER.info("=== INSERT ===");
         User newUser = new User();
-        newUser.setFirstName("Sophie");
-        newUser.setLastName("REDONCULE");
-        newUser.setMail("sr@test.com");
-        newUser.setPassword("sr");
+        newUser.setFirstName("Clarence");
+        newUser.setLastName("DICKS");
+        newUser.setMail("cd@test.com");
+        newUser.setPassword("cd");
         newUser.setAdmin(true);
         LOGGER.info(newUser.getFirstName() + " " + newUser.getLastName() + " inserted");
+        userRepository.save(newUser);
 
         LOGGER.info("=== ALL USERS (2) ===");
-        userRepository.save(newUser);
         List<User> usersApresInsert = userRepository.findAll();
         usersApresInsert.forEach(user -> {
             LOGGER.info(user.getFirstName() + " : " + user.isAdmin());
         });
 
         return "ok";
+    }
+
+    /**
+     * Find all users, avec autorisation CORS pour les requetes venant de l'UI JS
+     */
+    @GetMapping("/users-with-cors")
+    @ResponseBody
+    @CrossOrigin(origins="*", allowedHeaders="*")
+    public List<User> testFindAllUsersWithCors() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * Find user by id, + erreur 404 si l'utilisateur n'existe pas
+     */
+    @GetMapping("/users-with-cors/{id}")
+    @ResponseBody
+    @CrossOrigin(origins="*", allowedHeaders="*")
+    public User testUserByIdWithCors(@PathVariable long id) {
+        return userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "L'utilisateur n'existe pas"));
     }
 }
