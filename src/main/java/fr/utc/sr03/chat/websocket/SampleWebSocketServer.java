@@ -1,5 +1,6 @@
 package fr.utc.sr03.chat.websocket;
 
+import fr.utc.sr03.chat.dao.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,10 +17,15 @@ import java.util.Hashtable;
 public class SampleWebSocketServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SampleWebSocketServer.class);
 
-    private static SampleWebSocketServer singleton = new SampleWebSocketServer();
+    private static SampleWebSocketServer singleton;
+
+    private static UserRepository userRepository;
+
     private final Hashtable<String, Session> sessions = new Hashtable<>();
 
-    private SampleWebSocketServer() {}
+    private SampleWebSocketServer(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     //+++++++++++++++++++++++++++++++++++++++++++
     // CONFIG
@@ -35,6 +41,9 @@ public class SampleWebSocketServer {
     }
 
     public static SampleWebSocketServer getInstance() {
+        if (SampleWebSocketServer.singleton == null) {
+            SampleWebSocketServer.singleton = new SampleWebSocketServer(userRepository);
+        }
         return SampleWebSocketServer.singleton;
     }
 
