@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 @Component
-@ServerEndpoint(value="/sample/{login}", configurator= SampleWebSocketServer.EndpointConfigurator.class)
+@ServerEndpoint(value="/samplewebsocketserver/{login}", configurator= SampleWebSocketServer.EndpointConfigurator.class)
 public class SampleWebSocketServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SampleWebSocketServer.class);
 

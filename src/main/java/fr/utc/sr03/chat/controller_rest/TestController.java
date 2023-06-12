@@ -14,12 +14,12 @@ import java.util.List;
 
 /**
  * URLs du endpoint :
- * - http://localhost:8080/test/users
- * - http://localhost:8080/test/users-with-cors
+ * - http://localhost:8080/api/test/users
+ * - http://localhost:8080/api/test/users-with-cors
  * => Controller "API" (sans template html, retourne du JSON)
  */
 @Controller()
-@RequestMapping("test")
+@RequestMapping("api/open/test")
 public class TestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 

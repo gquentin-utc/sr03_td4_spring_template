@@ -93,3 +93,58 @@ _=> voir la classe fr.utc.sr03.chat.websocket.SampleWebSocketServer_
 
 Client HTML / JS :  
 _=> voir le fichier src/main/resources/test_websocket/sample_client.html_
+
+# JWT
+## Configuration
+Dans le pom.xml :
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt</artifactId>
+    <version>0.9.1</version>
+</dependency>
+```
+
+Dans application.properties :
+```
+api.security.token.signatureSecretKey=LeelooDallasMultipass
+api.security.token.validityInMilliseconds=3600000
+```
+
+Creer une classe java de fonctions utilitaires pour la gestion du token  
+_=> voir la classe fr.utc.sr03.chat.security.JwtTokenProvider_
+
+Creer une classe java de qui sera utilisee par spring security pour filtrer les requetes entrantes  
+_=> voir la classe fr.utc.sr03.chat.security.JwtTokenFilter_
+
+Creer une classe java de configuration  
+_=> voir la classe fr.utc.sr03.chat.security.CustomSecurityConfiguration_
+
+## Utilisation
+
+### 1 : Authentification
+Ici, cette partie est faite dans le Controller  
+
+- Verifier l'identite de l'utilisateur
+- Generer un token
+- Retourner le token au client  
+
+_=> voir la classe fr.utc.sr03.chat.controller_rest.SecureController_
+
+### 2 : Gestion du token cote client
+Cote client, il faut stocker le token (dans le local storage par exemple)  
+A chaque appel au webservice, le token devra etre envoye dans le header "Authorization" de la requete
+
+### 3 : Verification du token cote serveur
+La verification du token est faite a chaque requete par Spring 
+telle que definie dans la classe de configuration (CustomSecurityConfiguration)
+Le filtre permet de convertir le token en objet Authentication comprehensible par Spring
+
+## Securisation Websocket
+La connexion websocket ne permet pas de passer des headers lors des appels.  
+Une solution peut etre de passer le token dans l'url de connexion websocket,
+puis d'autoriser la connexion si le token est valide et selon les droits de l'utilisateur.
