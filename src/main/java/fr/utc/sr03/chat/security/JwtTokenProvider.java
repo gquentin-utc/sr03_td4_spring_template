@@ -1,6 +1,10 @@
 package fr.utc.sr03.chat.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.impl.DefaultClaims;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,30 +35,30 @@ public class JwtTokenProvider {
 	}
 
 	public String createSimpleToken(String login, String role) {
-		// Username
-	    Claims claims = Jwts.claims().setSubject(login);
-	    
-	    // Role
-	    if (role != null && !role.isEmpty()) {
-	    	claims.put("role", role);
-	    }
-		
-	    // Dates de creation et d'expiration
+		// Dates de creation et d'expiration
 		Date now = new Date();
 		Date expiration = new Date(now.getTime() + validityInMilliseconds);
 
-		// Build JWT
+		// SecretKey
+		SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+
 		return Jwts.builder()
-				.setClaims(claims)
-				.setIssuedAt(now)
-				.setExpiration(expiration)
-				.signWith(SignatureAlgorithm.HS256, secretKey)
+				.subject((login))
+				.claim("role", role != null ? role : "")
+				.issuedAt(now)
+				.expiration(expiration)
+				.signWith(key)
 				.compact();
 	}
 
 	public Optional<Authentication> getAuthentication(String token) {
 		if (isTokenValid(token)) {
-			Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+			// Recup payload
+			DefaultClaims claims = (DefaultClaims) Jwts.parser()
+					.verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+					.build()
+					.parse(token)
+					.getPayload();
 
 			// Recup username
 			String username = claims.getSubject();
@@ -77,12 +81,15 @@ public class JwtTokenProvider {
 	private boolean isTokenValid(String token){
 		if (token != null && !token.isEmpty()) {
 			try {
-				Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+				Jwts.parser()
+						.verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+						.build()
+						.parse(token);
 				return true;
 			} catch (ExpiredJwtException e) {
 				LOGGER.error("Le token a expire");
 			} catch (Exception e) {
-				LOGGER.error("Erreur lors de la validation du token : " + e.getMessage());
+				LOGGER.error(STR."Erreur lors de la validation du token : \{e.getMessage()}");
 			}
 		}
 

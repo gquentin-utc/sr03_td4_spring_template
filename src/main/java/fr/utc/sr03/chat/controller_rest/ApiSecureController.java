@@ -25,8 +25,8 @@ import java.util.List;
 @RestController
 @RequestMapping("api/secure/test")
 @CrossOrigin(origins="*", allowedHeaders="*")
-public class SecureController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SecureController.class);
+public class ApiSecureController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiSecureController.class);
 
     @Autowired
     private UserRepository userRepository;

@@ -6,16 +6,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.10</version>
+        <version>3.2.4</version>
     </parent>
 
     <groupId>fr.utc.sr03</groupId>
     <artifactId>td4_spring_template</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <name>td4_spring_template</name>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>22</java.version>
     </properties>
 
     <dependencies>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <!-- downgrade to 1.4.200 to avoid a bug with spring boot 2.7.10 (hibernate) -->
+            <!-- downgrade vers 1.4.200 pour eviter un probleme de hibernate lors de la generation de la cle primaire "auto increment" -->
             <version>1.4.200</version>
             <scope>runtime</scope>
         </dependency>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.32</version>
+            <version>8.3.0</version>
         </dependency>
         <!-- Thymeleaf -->
         <dependency>
@@ -63,8 +63,18 @@
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.5</version>
         </dependency>
     </dependencies>
 

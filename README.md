@@ -104,14 +104,24 @@ Dans le pom.xml :
 </dependency>
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
-    <artifactId>jjwt</artifactId>
-    <version>0.9.1</version>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.12.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.12.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.12.5</version>
 </dependency>
 ```
 
 Dans application.properties :
 ```
-api.security.token.signatureSecretKey=LeelooDallasMultipass
+api.security.token.signatureSecretKey=1234LeelooDallasMultipass
 api.security.token.validityInMilliseconds=3600000
 ```
 
@@ -130,7 +140,7 @@ _=> voir la classe fr.utc.sr03.chat.security.CustomSecurityConfiguration_
 Ici, cette partie est faite dans le Controller  
 
 - Verifier l'identite de l'utilisateur
-- Generer un token
+- Generer un token (ici, le token est signe avec une cle secrete, mais pas chiffré)
 - Retourner le token au client  
 
 _=> voir la classe fr.utc.sr03.chat.controller_rest.SecureController_
