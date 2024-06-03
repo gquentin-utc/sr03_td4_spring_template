@@ -31,7 +31,7 @@ public class CustomSecurityConfiguration {
 						// Autorisation du endpoint REST "login" ... faut bien pouvoir se logger
 						.requestMatchers("/api/secure/test/login/**").permitAll()
 						// Autorisation des endpoints Websocket : la securite est geree manuellement dans le serveur websocket
-						.requestMatchers("/samplewebsocketserver/**").permitAll()
+						.requestMatchers("/chat/**").permitAll()
 						// Toutes les autres requetes necessitent une authentification
 						.anyRequest().authenticated()
 				)

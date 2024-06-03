@@ -1,18 +1,15 @@
 package fr.utc.sr03.chat.websocket;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-/**
- * https://programming.vip/docs/four-ways-of-integrating-websocket-with-spring-boot.html
- */
 @Configuration
 @EnableWebSocket
-public class WebSocketConfig {
-    @Bean
-    public ServerEndpointExporter serverEndpoint() {
-        return new ServerEndpointExporter();
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new WebSocketHandler("SR03 Chat Server"), "/chat").setAllowedOrigins("*");
     }
 }
