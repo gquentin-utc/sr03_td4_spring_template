@@ -89,7 +89,7 @@ public class JwtTokenProvider {
 			} catch (ExpiredJwtException e) {
 				LOGGER.error("Le token a expire");
 			} catch (Exception e) {
-				LOGGER.error(STR."Erreur lors de la validation du token : \{e.getMessage()}");
+				LOGGER.error("Erreur lors de la validation du token : " + e.getMessage());
 			}
 		}
 

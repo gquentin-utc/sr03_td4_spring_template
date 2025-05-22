@@ -34,7 +34,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (token.isPresent()) {
             Optional<Authentication> authentication = jwtTokenProvider.getAuthentication(token.get());
             if (authentication.isPresent()) {
-                LOGGER.info(STR."Authentication : \{authentication.get()}");
+                LOGGER.info("Authentication : " + authentication.get());
                 SecurityContextHolder.getContext().setAuthentication(authentication.get());
             }
             else{
